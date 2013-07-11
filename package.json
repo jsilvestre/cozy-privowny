@@ -1,0 +1,25 @@
+{
+  "name": "cozy-data-integrator",
+  "version": "0.0.1",
+  "description": "DataIntegrator for the MesInfos Project",
+  "main": "server.coffee",
+  "dependencies": {
+    "jugglingdb": "~0.2.0-25",
+    "jugglingdb-cozy-adapter": "~0.3.2",
+    "express": "~3.1.0",
+    "cozy-realtime-adapter": "~0.11.0"
+  },
+  "devDependencies": {
+    "chai": "~1.5.0",
+    "mocha": "~1.9.0",
+    "sinon": "~1.6.0",
+    "coffee-script": "*"
+  },
+  "scripts": {
+    "test": "mocha server/_specs/ --reporter spec --compilers coffee:coffee-script --colors",
+    "start": "coffee server.coffee"
+  },
+  "repository": "https://github.com/mycozycloud/cozy-data-integrator",
+  "author": "Cozycloud",
+  "readmeFilename": "README.md"
+}
