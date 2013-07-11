@@ -7,7 +7,8 @@
     "jugglingdb": "~0.2.0-25",
     "jugglingdb-cozy-adapter": "~0.3.2",
     "express": "~3.1.0",
-    "cozy-realtime-adapter": "~0.11.0"
+    "cozy-realtime-adapter": "~0.11.0",
+    "jade": "~0.32.0"
   },
   "devDependencies": {
     "chai": "~1.5.0",
