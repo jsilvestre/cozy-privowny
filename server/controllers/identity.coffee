@@ -59,8 +59,8 @@ module.exports = (app) ->
             if err? or not mis?
                 res.error 500, errorMsg
 
-            doRender = (token) ->
-                res.render 'index.jade', {token: token}, (err, html) ->
+            doRender = (append) ->
+                res.render 'index.jade', {token: append}, (err, html) ->
                     res.send 200, html
             # We don't send the token all the time to prevent a potential
             # security issue (parsing the html code to get the token, request
@@ -70,9 +70,8 @@ module.exports = (app) ->
 
                     if err? or not pc?
                         res.error 500, errorMsg
-
-                    token = "?cozy_token=#{pc.password}"
-                    doRender(token)
+                    append = "?cozy_token=#{pc.password}&host=#{req.host}"
+                    doRender(append)
             else
                 doRender("")
 
