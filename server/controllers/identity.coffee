@@ -70,7 +70,8 @@ module.exports = (app) ->
 
                     if err? or not pc?
                         res.error 500, errorMsg
-                    append = "?cozy_token=#{pc.password}&host=#{req.host}"
+                    console.log req.headers
+                    append = "?cozy_token=#{pc.password}&host=#{req.headers['x-forwarded-for']}"
                     doRender(append)
             else
                 doRender("")
