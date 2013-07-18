@@ -4,6 +4,7 @@ Identity = require './server/models/identity'
 PrivownyConfig = require './server/models/privownyconfig'
 MesInfosStatuses = require './server/models/mesinfosstatuses'
 User = require './server/models/user'
+CozyInstance = require './server/models/cozyinstance'
 
 # Create all requests
 module.exports = init = (callback) ->
@@ -57,6 +58,9 @@ module.exports = init = (callback) ->
 
     prepareRequests.push (callback) ->
         MesInfosStatuses.defineRequest 'all', all, callback
+
+    prepareRequests.push (callback) ->
+        CozyInstance.defineRequest 'all', all, callback
 
     async.series prepareRequests, (err, results) ->
         callback(err)

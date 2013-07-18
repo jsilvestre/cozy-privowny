@@ -2,6 +2,7 @@ Identity = require '../models/identity'
 PrivownyConfig = require '../models/privownyconfig'
 MesInfosStatuses = require '../models/mesinfosstatuses'
 User = require '../models/user'
+CozyInstance = require '../models/cozyinstance'
 
 module.exports = (app) ->
 
@@ -70,9 +71,10 @@ module.exports = (app) ->
 
                     if err? or not pc?
                         res.error 500, errorMsg
-                    console.log req.headers
-                    append = "?cozy_token=#{pc.password}&host=#{req.headers['x-forwarded-for']}"
-                    doRender(append)
+                    CozyInstance.getInstance (err, ci) ->
+                        console.log ci
+                        append = "?cozy_token=#{pc.password}&host=#{ci.domain}"
+                        doRender(append)
             else
                 doRender("")
 
