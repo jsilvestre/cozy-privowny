@@ -16,7 +16,6 @@ module.exports = (app) ->
 
     #test environement
     app.configure 'test', ->
-        app.set "processor_url", "http://localhost:8888/"
 
     #development environement
     app.configure 'development', ->
@@ -24,7 +23,6 @@ module.exports = (app) ->
         app.use express.errorHandler
             dumpExceptions: true
             showStack: true
-        app.set "processor_url", "http://localhost:9261/"
 
     #production environement
     app.configure 'production', ->
@@ -32,7 +30,6 @@ module.exports = (app) ->
         app.use express.errorHandler
             dumpExceptions: true
             showStack: true
-        app.set "processor_url", "http://localhost:9261/"
 
     # static middleware
     app.use express.static __dirname + '/../client/public',
