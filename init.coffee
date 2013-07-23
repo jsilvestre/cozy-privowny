@@ -45,19 +45,9 @@ module.exports = init = (callback) ->
                         console.log msg
                         callback err
                     else
-                        if ide.length > 0
-                            Identity.requestDestroy "all", {}, (err) ->
+                        Identity.requestDestroy "all", {}, (err) ->
                         #if ide.length is 0
-                                console.log err if err?
-                                console.log "No existing document, creating..."
-                                fake =
-                                    firstName: "Joseph"
-                                    lastName: "Silvestre"
-                                    birthDate: "1990-02-02"
-                                Identity.create fake, (err, ide) ->
-                                    console.log "Identity intialized."
-                                    callback err
-                        else
+                            console.log err if err?
                             console.log "No existing document, creating..."
                             fake =
                                 firstName: "Joseph"
