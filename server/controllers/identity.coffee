@@ -26,10 +26,10 @@ module.exports = (app) ->
 
                     errorMsg = "Error while retrieving the information."
                     if err?
-                        res.send 500, errorMsg, err
+                        res.error 500, errorMsg, err
                     User.getUser (err, user) ->
                         if err
-                            res.send 500, errorMsg, err
+                            res.error 500, errorMsg, err
                         else
                             merged = {}
                             merged.firstName = ide.firstName
@@ -39,13 +39,14 @@ module.exports = (app) ->
                             res.send 200, merged
 
                             # A request means the user is registered on privowny
-                            MesInfosStatuses.getStatuses (err, mis) ->
+                            ###MesInfosStatuses.getStatuses (err, mis) ->
                                 mis.privowny_registered = true
                                 mis.save mis, (err) ->
                                     msg = "An error occurred while " + \
                                           "updating the status."
                                     if err?
                                         res.error 500, msg, err
+                            ###
             else
                 res.error 403, "La ressource n'est plus disponible. " + \
                                "Merci de contacter un administrateur Cozy " + \
