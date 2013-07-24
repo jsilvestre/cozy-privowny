@@ -65,20 +65,23 @@ module.exports = (app) ->
             doRender = (append) ->
                 res.render 'index.jade', {token: append}, (err, html) ->
                     res.send 200, html
+
             # We don't send the token all the time to prevent a potential
             # security issue (parsing the html code to get the token, request
             # the app to get the identity)
-            mis.privowny_registered = false
             unless mis.privowny_registered
                 PrivownyConfig.getConfig (err, pc) ->
 
                     if err? or not pc?
                         res.error 500, errorMsg
                     CozyInstance.getInstance (err, ci) ->
-                        console.log ci
                         append = "?cozy_token=#{pc.password}&host=#{ci.domain}"
-                        doRender(append)
+                        doRender append
             else
-                doRender("")
+                if req.query.target?
+                    target = decodeURIComponent req.query.target
+                else
+                    target = ""
+                doRender target
 
 
