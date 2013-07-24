@@ -69,6 +69,7 @@ module.exports = (app) ->
             # We don't send the token all the time to prevent a potential
             # security issue (parsing the html code to get the token, request
             # the app to get the identity)
+            mis.privowny_registered = true
             unless mis.privowny_registered
                 PrivownyConfig.getConfig (err, pc) ->
 
