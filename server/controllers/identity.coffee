@@ -79,8 +79,9 @@ module.exports = (app) ->
                         append = "?cozy_token=#{pc.password}&host=#{ci.domain}"
                         doRender append
             else
-                if req.query.target?
-                    target = decodeURIComponent req.query.target
+                console.log req.params
+                if req.params.lenght > 0
+                    target = decodeURIComponent req.params
                 else
                     target = ""
                 doRender target
