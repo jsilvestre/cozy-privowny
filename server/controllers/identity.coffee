@@ -62,28 +62,32 @@ module.exports = (app) ->
             if err? or not mis?
                 res.error 500, errorMsg
 
-            doRender = (append) ->
-                res.render 'index.jade', {token: append}, (err, html) ->
+            doRender = (append, askOauthRegistration) ->
+                opts =
+                    token: append
+                    askOauthRegistration: askOauthRegistration
+                res.render 'index.jade', opts, (err, html) ->
                     res.send 200, html
 
             # We don't send the token all the time to prevent a potential
             # security issue (parsing the html code to get the token, request
             # the app to get the identity)
             mis.privowny_registered = true
+            askOauthRegistration = mis.privowny_registered \
+                                   and not mis.privowny_oauth_registered
             unless mis.privowny_registered
                 PrivownyConfig.getConfig (err, pc) ->
 
-                    if err? or not pc?
-                        res.error 500, errorMsg
+                    res.error 500, errorMsg if err? or not pc?
+
                     CozyInstance.getInstance (err, ci) ->
                         append = "?cozy_token=#{pc.password}&host=#{ci.domain}"
-                        doRender append
+                        doRender append, askOauthRegistration
             else
-                console.log req.params
                 if req.params.lenght > 0
                     target = decodeURIComponent req.params
                 else
                     target = ""
-                doRender target
+                doRender target, askOauthRegistration
 
 

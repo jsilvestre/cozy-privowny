@@ -4,13 +4,18 @@ html(lang="fr")
     meta(charset="utf-8")
     title Mes Infos - Privowny
     script(type="text/javascript", src="jquery.js")
+    script(type="text/javascript", src="jquery.reveal.js")
     script(type="text/javascript", src="app.js")
-    style.
-        html,
-        body {
-         height: 100%;
-          width: 100%;
-          margin: 0;
-        }
+    link(rel="stylesheet", href="reveal.css")
+    script(type="text/javascript").
+      var askOauthRegistration = !{askOauthRegistration}
+
   body
-    iframe(src="https://mesinfos.privowny.com/#{token}", width="100%", height="100%", seamless="seamless")
+      div#modal.reveal-modal
+        h4 Lier mon compte Privowny et mon compte Cozy
+        p.
+          Afin de profiter d'une meilleure intégration entre Cozy et Privowny
+          dans le cadre de l'expérimentation MesInfos, nous vous prions de lier
+          votre compte Privowny et votre Cozy.<br />
+        a(href="oauth/") Lier mon compte Privowny et mon Cozy
+      iframe(src="https://mesinfos.privowny.com/#{token}", width="100%", height="100%", seamless="seamless")
