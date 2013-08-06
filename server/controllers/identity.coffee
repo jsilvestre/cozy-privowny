@@ -20,33 +20,33 @@ module.exports = (app) ->
             # We don't send the token all the time to prevent a potential
             # security issue (parsing the html code to get the token, request
             # the app to get the identity)
-            mis.privowny_registered = false
             unless mis.privowny_registered
                 Identity.getIdentity (err, ide) ->
 
                     errorMsg = "Error while retrieving the information."
                     if err?
                         res.error 500, errorMsg, err
-                    User.getUser (err, user) ->
-                        if err
-                            res.error 500, errorMsg, err
-                        else
-                            merged = {}
-                            merged.firstName = ide.firstName
-                            merged.lastName = ide.lastName
-                            merged.email = user.email
-                            merged.birthdate = ide.birthdate
-                            res.send 200, merged
+                    else
+                        User.getUser (err, user) ->
+                            if err
+                                res.error 500, errorMsg, err
+                            else
+                                merged = {}
+                                merged.firstName = ide.firstName
+                                merged.lastName = ide.lastName
+                                merged.email = user.email
+                                merged.birthdate = ide.birthdate
+                                console.log merged, ide
+                                res.send 200, merged
 
-                            # A request means the user is registered on privowny
-                            ###MesInfosStatuses.getStatuses (err, mis) ->
-                                mis.privowny_registered = true
-                                mis.save mis, (err) ->
-                                    msg = "An error occurred while " + \
-                                          "updating the status."
-                                    if err?
-                                        res.error 500, msg, err
-                            ###
+                                # A request means the user is registered on privowny
+                                MesInfosStatuses.getStatuses (err, mis) ->
+                                    mis.privowny_registered = true
+                                    mis.save mis, (err) ->
+                                        msg = "An error occurred while " + \
+                                              "updating the status."
+                                        if err?
+                                            console.log msg, err
             else
                 res.error 403, "La ressource n'est plus disponible. " + \
                                "Merci de contacter un administrateur Cozy " + \
@@ -72,7 +72,6 @@ module.exports = (app) ->
             # We don't send the token all the time to prevent a potential
             # security issue (parsing the html code to get the token, request
             # the app to get the identity)
-            mis.privowny_registered = true
             askOauthRegistration = mis.privowny_registered \
                                    and not mis.privowny_oauth_registered
             unless mis.privowny_registered
