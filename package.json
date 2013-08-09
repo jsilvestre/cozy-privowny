@@ -16,5 +16,21 @@
   },
   "repository": "https://github.com/mycozycloud/cozy-data-integrator",
   "author": "Cozycloud",
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "cozy-permissions" :{
+    "cozyinstance": {
+      "description": "Afin de faciliter l'inscription à Privowny, l'application a besoin de connaître l'url de votre Cozy."
+    },
+    "mesinfosstatuses": {
+      "description": "Afin d'organiser la prise en main de la plateforme, l'application a besoin de savoir ce que vous avez déjà fait ou pas."
+    },
+    "user": {
+      "description": "Afin de faciliter l'inscription à Privowny, l'application a besoin de connaître vorte adresse email."
+    },
+    "identity": {
+      "description": "Afin de faciliter l'inscription à Privowny, l'application a besoin de connaître votre identité."
+    },
+    "privownyconfig": {
+      "description": "Espace personnel de configuration de l'application Privowny."
+    }
 }
