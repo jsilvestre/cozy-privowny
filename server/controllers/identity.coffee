@@ -41,12 +41,14 @@ module.exports = (app) ->
 
                                 # A request means the user is registered on privowny
                                 MesInfosStatuses.getStatuses (err, mis) ->
-                                    mis.privowny_registered = true
-                                    mis.save mis, (err) ->
+                                    attr = privowny_registered: true
+                                    mis.updateAttributes attr, (err) ->
                                         msg = "An error occurred while " + \
                                               "updating the status."
                                         if err?
                                             console.log msg, err
+                                        else
+                                            console.log "Status updated."
             else
                 res.error 403, "La ressource n'est plus disponible. " + \
                                "Merci de contacter un administrateur Cozy " + \
