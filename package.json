@@ -1,5 +1,5 @@
 {
-  "name": "cozy-privowny",
+  "name": "Privowny",
   "version": "0.0.1",
   "description": "Accéder à vos données Privowny depuis Cozy.",
   "main": "server.coffee",
@@ -14,7 +14,7 @@
     "test": "mocha server/_specs/ --reporter spec --compilers coffee:coffee-script --colors",
     "start": "coffee server.coffee"
   },
-  "repository": "https://github.com/mycozycloud/cozy-data-integrator",
+  "repository": "https://github.com/jsilvestre/cozy-privowny.git",
   "author": "Cozycloud",
   "readmeFilename": "README.md",
   "cozy-permissions" :{
