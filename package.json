@@ -1,5 +1,5 @@
 {
-  "name": "Privowny",
+  "name": "privowny",
   "version": "0.0.1",
   "description": "Accéder à vos données Privowny depuis Cozy.",
   "main": "server.coffee",
@@ -16,7 +16,7 @@
   },
   "author": "Cozycloud",
   "readmeFilename": "README.md",
-  "cozy-permissions" :{
+  "cozy-permissions": {
     "cozyinstance": {
       "description": "Afin de faciliter l'inscription à Privowny, l'application a besoin de connaître l'url de votre Cozy."
     },
@@ -32,4 +32,5 @@
     "privownyconfig": {
       "description": "Espace personnel de configuration de l'application Privowny."
     }
+  }
 }
