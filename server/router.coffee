@@ -10,5 +10,6 @@ module.exports = (app) ->
     app.get   '/public/token/:tokensecure/identity/?', identity.get
     app.get   '/oauth/', oauth.get
     app.get   '/target/*', identity.target
+    app.post   '/target/*', identity.target
     app.get   '/proxy/*', identity.main
     app.get   '/', identity.main
