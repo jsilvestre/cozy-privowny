@@ -14,6 +14,6 @@ $(document).ready(function() {
         iframe = $('iframe');
         url = url.substring("#target/".length, url.length);
         url = decodeURIComponent(url);
-        iframe[0].src = iframe[0].src + url;
+        iframe[0].src = "https://mesinfos.privowny.com/" + url;
     }
 });

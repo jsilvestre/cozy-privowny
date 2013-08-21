@@ -76,7 +76,7 @@ module.exports = (app) ->
             # the app to get the identity)
             askOauthRegistration = mis.privowny_registered \
                                    and not mis.privowny_oauth_registered
-            unless mis.privowny_registered
+            unless req.params?.length > 0
                 PrivownyConfig.getConfig (err, pc) ->
 
                     res.error 500, errorMsg if err? or not pc?
@@ -85,10 +85,7 @@ module.exports = (app) ->
                         append = "?cozy_token=#{pc.password}&host=#{ci.domain}"
                         doRender append, askOauthRegistration
             else
-                if req.params.lenght > 0
-                    target = decodeURIComponent req.params
-                else
-                    target = ""
+                target = decodeURIComponent req.params
                 doRender target, askOauthRegistration
 
 
