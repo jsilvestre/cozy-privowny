@@ -65,6 +65,7 @@ module.exports = (app) ->
                 res.error 500, errorMsg
 
             doRender = (append, askOauthRegistration) ->
+                askOauthRegistration = false unless askOauthRegistration?
                 opts =
                     token: append
                     askOauthRegistration: askOauthRegistration
