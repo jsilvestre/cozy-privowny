@@ -89,4 +89,9 @@ module.exports = (app) ->
                 target = decodeURIComponent req.params
                 doRender target, askOauthRegistration
 
+    target: (req, res) ->
+        newUrl = decodeURIComponent req.params
+        prefix = "https://mesinfos.privowny.com/"
+        res.redirect "#{prefix}#{newUrl}"
+
 
