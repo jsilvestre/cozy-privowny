@@ -92,6 +92,17 @@ module.exports = (app) ->
     target: (req, res) ->
         newUrl = decodeURIComponent req.params
         prefix = "https://mesinfos.privowny.com/"
-        res.redirect "#{prefix}#{newUrl}"
+
+        request = require 'request'
+        opts =
+            url: "#{prefix}#{newUrl}"
+            method: "POST"
+            form: req.body
+
+        request opts, (err, response, body) ->
+            console.log err if err?
+            for headerLabel, headerValue of response.headers
+                res.set headerLabel, headerValue
+            res.send body
 
 
