@@ -8,7 +8,9 @@ module.exports = (app) ->
 
     # CRUD routes
     app.get   '/public/token/:tokensecure/identity/?', identity.get
-    app.get   '/oauth/', oauth.get
+    app.get   '/public/token/:tokensecure/registered/?', identity.markAsRegistered
+    app.get   '/oauth/', oauth.initiate
+    app.get   '/oauth/authorize/?', oauth.authorize
     app.get   '/target/*', identity.target
     app.post   '/target/*', identity.target
     app.get   '/proxy/*', identity.main
