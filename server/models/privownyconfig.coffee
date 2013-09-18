@@ -5,6 +5,12 @@ module.exports = PrivownyConfig = db.define 'privownyconfig',
     password:
         type: String
         default: ""
+    token:
+        type: Object
+        default: null
+    lastUpdate:
+        type: Date
+        default: null
 
 PrivownyConfig.getConfig = (callback) ->
     PrivownyConfig.request 'all', (err, pc) ->

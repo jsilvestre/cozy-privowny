@@ -3,6 +3,7 @@ express = require 'express'
 init = require './init'
 router = require './server/router'
 configure = require './server/config'
+realtimeInitializer = require './server/helpers/realtime'
 
 module.exports = app = express()
 configure(app)
@@ -20,3 +21,4 @@ if not module.parent
         server = http.createServer(app).listen port, host, ->
             console.log "Server listening on %s:%d within %s environment",
                 host, port, app.get('env')
+            realtimeInitializer(app, server)

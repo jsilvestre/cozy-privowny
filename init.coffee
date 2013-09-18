@@ -5,10 +5,15 @@ PrivownyConfig = require './server/models/privownyconfig'
 MesInfosStatuses = require './server/models/mesinfosstatuses'
 User = require './server/models/user'
 CozyInstance = require './server/models/cozyinstance'
+BrowsedCompany = require './server/models/browsedcompany'
+WebInput = require './server/models/webinput'
 
 # Create all requests
 module.exports = init = (callback) ->
     all = (doc) -> emit doc._id, doc
+
+    allCompanyByPOID = (doc) -> emit doc.poCompanyId, doc
+    allParametersByPOID = (doc) -> emit doc.poParamId, doc
 
     prepareRequests = []
 
@@ -66,6 +71,14 @@ module.exports = init = (callback) ->
 
     prepareRequests.push (callback) ->
         CozyInstance.defineRequest 'all', all, callback
+
+    prepareRequests.push (callback) ->
+        BrowsedCompany.defineRequest 'allCompanyByPOID', allCompanyByPOID, (err) ->
+            callback err
+
+    prepareRequests.push (callback) ->
+        WebInput.defineRequest 'allParametersByPOID', allParametersByPOID, (err) ->
+            callback err
 
     async.series prepareRequests, (err, results) ->
         callback(err)

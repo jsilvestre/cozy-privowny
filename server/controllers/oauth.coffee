@@ -1,4 +1,5 @@
 MesInfosStatuses = require '../models/mesinfosstatuses'
+PrivownyConfig = require '../models/privownyconfig'
 request = require 'request'
 
 db = {}
@@ -20,28 +21,28 @@ module.exports = (app) ->
         # Authorization
         request.get {url: url, json: true}, (err, response, body) ->
 
-            if err? or not (res?.statusCode is 200)
+            if err? or not (res?.statusCode is 200) or not body? or not body.access_token?
                 statusCode = 500
                 console.log "Error occurred from Privowny server -- #{err}"
             else
                 statusCode = 200
-                db.token = body
 
-                # update privonwy oauth status
-                MesInfosStatuses.getStatuses (err, mis) ->
-                    mis.privowny_oauth_registered = true
-                    mis.save mis, (err) ->
+                PrivownyConfig.getConfig (err, pc) ->
+                    console.log "Can't get PrivownyConfig -- #{err}" if err?
+                    pc.updateAttributes token: body, (err) ->
                         if err?
-                            console.log "Oauth::authorize > #{err}"
+                            msg = "Fail to update PrivownyConfig -- #{err}"
+                            console.log msg
                         else
-                            url = "http://privowny.com.ua/PrivownyAPI/api/companies?access_token=#{db.token.access_token}"
-                            request.get {url: url, json: true}, (err, response, body) ->
-                                console.log err if err?
-                                console.log res?.statusCode
-                                console.log body
+                            # update privonwy oauth status
+                            MesInfosStatuses.getStatuses (err, mis) ->
+                                mis.privowny_oauth_registered = true
+                                mis.save mis, (err) ->
+                                    if err?
+                                        console.log "Oauth::authorize > #{err}"
 
-                            # dev mode
-                            if host is "http://localhost:9262"
-                                res.redirect "/"
-                            else
-                                res.redirect "/#apps/privowny/"
+                                    # dev mode
+                                    if host is "http://localhost:9262"
+                                        res.redirect "/"
+                                    else
+                                        res.redirect "/#apps/privowny/"
