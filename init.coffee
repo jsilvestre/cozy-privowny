@@ -40,28 +40,7 @@ module.exports = init = (callback) ->
 
     # Create request and the document if not existing
     prepareRequests.push (callback) ->
-        Identity.defineRequest 'all', all, (err) ->
-            if err
-                callback err
-            else
-                Identity.getIdentity (err, ide) ->
-                    if err?
-                        msg = "Internal error occurred, can't load the identity"
-                        console.log msg
-                        callback err
-                    else
-                        if ide.length is 0
-                            console.log err if err?
-                            console.log "No existing document, creating..."
-                            fake =
-                                firstName: "Joseph"
-                                lastName: "Silvestre"
-                                birthDate: "1990-02-02"
-                            Identity.create fake, (err, ide) ->
-                                console.log "Identity initialized."
-                                callback err
-                        else
-                            callback err
+        Identity.defineRequest 'all', all, callback
 
     prepareRequests.push (callback) ->
         User.defineRequest 'all', all, callback
