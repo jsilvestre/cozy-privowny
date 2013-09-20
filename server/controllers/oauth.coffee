@@ -6,15 +6,15 @@ request = require 'request'
 db = {}
 clientID = "clientId"
 clientSecret = "clientSecret"
-
-CozyInstance.getInstance (err, ci) ->
-    host = ci.domain
+host = null
 
 module.exports = (app) ->
 
     initiate: (req, res) ->
-        url = "http://mesinfos.privowny.com/PrivownyAPI/oauth/authorize.dispatch?response_type=code&client_id=clientId&client_secret=clientSecret&redirect_uri=#{host}/oauth/authorize"
-        res.redirect url
+        CozyInstance.getInstance (err, ci) ->
+            host = "https://#{ci.domain}"
+            url = "http://mesinfos.privowny.com/PrivownyAPI/oauth/authorize.dispatch?response_type=code&client_id=clientId&client_secret=clientSecret&redirect_uri=#{host}/oauth/authorize"
+            res.redirect url
 
     authorize: (req, res) ->
 
