@@ -1,5 +1,6 @@
 MesInfosStatuses = require '../models/mesinfosstatuses'
 PrivownyConfig = require '../models/privownyconfig'
+CozyInstance = require '../models/cozyinstance'
 request = require 'request'
 
 db = {}
