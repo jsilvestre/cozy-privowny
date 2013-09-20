@@ -19,7 +19,7 @@ module.exports = (app) ->
     authorize: (req, res) ->
 
         db.code = code = req.query.code
-        url = "http://mesinfos.privowny.com/PrivownyAPI/oauth/token.dispatch?response_type=code&client_id=clientId&client_secret=clientSecret&redirect_uri=#{host}/oauth/authorize&code=#{db.code}&grant_type=authorization_code"
+        url = "https://mesinfos.privowny.com/api/oauth/token.dispatch?response_type=code&client_id=clientId&client_secret=clientSecret&redirect_uri=#{host}/oauth/authorize&code=#{db.code}&grant_type=authorization_code"
 
         # Authorization
         request.get {url: url, json: true}, (err, response, body) ->
