@@ -6,7 +6,7 @@ WebInput = require '../models/webinput'
 
 class Processor
 
-    @urlPrefix: "http://mesinfos.privowny.com/PrivownyAPI/api/"
+    @urlPrefix: "https://mesinfos.privowny.com/api/api/"
     @urls:
         'companies': "companies?" # optional: id=companyID
         # companyID=companyID for company's parameter
