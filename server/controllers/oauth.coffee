@@ -48,4 +48,4 @@ module.exports = (app) ->
                                     if host is "http://localhost:9262"
                                         res.redirect "/"
                                     else
-                                        res.redirect "/#apps/privowny/"
+                                        res.redirect "https://mesinfos.privowny.com/"
