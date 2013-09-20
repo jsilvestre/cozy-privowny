@@ -12,7 +12,7 @@ module.exports = (app) ->
 
     initiate: (req, res) ->
         CozyInstance.getInstance (err, ci) ->
-            host = "https://#{ci.domain}/#apps/privowny"
+            host = "https://#{ci.domain}/apps/privowny"
             url = "https://mesinfos.privowny.com/api/oauth/authorize.dispatch?response_type=code&client_id=clientId&client_secret=clientSecret&redirect_uri=#{host}/oauth/authorize"
             res.redirect url
 
