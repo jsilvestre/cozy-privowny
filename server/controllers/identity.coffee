@@ -35,7 +35,6 @@ module.exports = (app) ->
                                 merged.firstName = ide.firstName
                                 merged.lastName = ide.lastName
                                 merged.email = user.email
-                                merged.birthdate = ide.birthdate
                                 res.send 200, merged
             else
                 res.error 403, "La ressource n'est plus disponible. " + \

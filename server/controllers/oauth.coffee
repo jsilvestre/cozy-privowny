@@ -5,7 +5,9 @@ request = require 'request'
 db = {}
 clientID = "clientId"
 clientSecret = "clientSecret"
-host = process.env.HOST
+
+CozyInstance.getInstance (err, ci) ->
+    host = ci.domain
 
 module.exports = (app) ->
 
