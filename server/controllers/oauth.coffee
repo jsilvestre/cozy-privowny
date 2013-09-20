@@ -5,18 +5,18 @@ request = require 'request'
 db = {}
 clientID = "clientId"
 clientSecret = "clientSecret"
-host = "http://localhost:9262"
+host = process.env.HOST
 
 module.exports = (app) ->
 
     initiate: (req, res) ->
-        url = "http://privowny.com.ua/PrivownyAPI/oauth/authorize.dispatch?response_type=code&client_id=clientId&client_secret=clientSecret&redirect_uri=#{host}/oauth/authorize"
+        url = "http://mesinfos.privowny.com/PrivownyAPI/oauth/authorize.dispatch?response_type=code&client_id=clientId&client_secret=clientSecret&redirect_uri=#{host}/oauth/authorize"
         res.redirect url
 
     authorize: (req, res) ->
 
         db.code = code = req.query.code
-        url = "http://privowny.com.ua/PrivownyAPI/oauth/token.dispatch?response_type=code&client_id=clientId&client_secret=clientSecret&redirect_uri=#{host}/oauth/authorize&code=#{db.code}&grant_type=authorization_code"
+        url = "http://mesinfos.privowny.com/PrivownyAPI/oauth/token.dispatch?response_type=code&client_id=clientId&client_secret=clientSecret&redirect_uri=#{host}/oauth/authorize&code=#{db.code}&grant_type=authorization_code"
 
         # Authorization
         request.get {url: url, json: true}, (err, response, body) ->
