@@ -16,7 +16,6 @@ module.exports = (app) ->
 
             res.error 500, errorMsg if err? or not mis?
 
-
             # We don't send the token all the time to prevent a potential
             # security issue (parsing the html code to get the token, request
             # the app to get the identity)
@@ -76,6 +75,7 @@ module.exports = (app) ->
                 target = decodeURIComponent req.params
                 doRender target, askOauthRegistration
 
+    # another proxy route
     target: (req, res) ->
         newUrl = decodeURIComponent req.params
         prefix = "https://mesinfos.privowny.com/"
@@ -92,6 +92,8 @@ module.exports = (app) ->
                 res.set headerLabel, headerValue
             res.send body
 
+    # privowny calls it once when the user has successfully registered
+    # so we update the cozy status
     markAsRegistered: (req, res) ->
 
        MesInfosStatuses.getStatuses (err, mis) ->
