@@ -24,5 +24,7 @@ module.exports = (app, server) ->
 
     triggerPolling()
 
+    # when the token has changed or is received the first time, we must update
+    # the processor with the new token
     realtime.on 'privownyconfig.update', (event, id) ->
         triggerPolling()
