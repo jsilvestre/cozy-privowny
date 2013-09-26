@@ -9,6 +9,7 @@ class Processor
     @urlPrefix: "https://mesinfos.privowny.com/api/api/"
     @urls:
         'companies': "companies?" # optional: id=companyID
+
         # companyID=companyID for company's parameter
         # id=parameterID for parameter details
         'parameters': "parameters?"
@@ -56,11 +57,35 @@ class Processor
         url = @getUrl 'companies'
         request.get {url: url, json: true}, (err, res, body) =>
             console.log err if err?
-            companies = body.companies
-            for company in companies
-                @_companyFactory company
 
-        callback() if callback?
+            if res? and res.statusCode? and res.statusCode is 401
+                console.log "> Invalid token, starting the refreshing process."
+                @refreshToken()
+
+            else if res? and res.statusCode and statusCode is 200
+                companies = body.companies || []
+                for company in companies
+                    @_companyFactory company
+
+                callback() if callback?
+
+    refreshToken: ->
+        console.log "Token refreshed, start the polling..."
+        refreshToken = @token.refresh_token
+        url = "https://mesinfos.privowny.com/api/oauth/token.dispatch?client_id=clientId&client_secret=clientSecret&refresh_token=#{refreshToken}&grant_type=refresh_token"
+        request.get {url: url, json: true}, (err, res, body) =>
+            if err?
+                console.log "Cannot refresh token"
+                console.log "Must reask user consent"
+            else if res? and res.statusCode is 401
+                console.log "> Invalid refresh token, must reask user consent"
+            else
+                @privownyConfig.updateAttributes token: body (err) =>
+                    if err?
+                        console.log "Must reask user consent"
+                    else
+                        @token = body
+
 
     _companyFactory: (company) ->
 
