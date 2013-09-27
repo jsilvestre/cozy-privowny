@@ -42,7 +42,7 @@
     "webinput": {
       "description": "Les données que vous avez entrée et qui ont été enregistré par votre barre Privowny."
     },
-    "browedcompany": {
+    "browsedcompany": {
       "description": "Les entreprises auxquelles vous avez laissé des données détectée par votre barre Privowny."
     }
   }
