@@ -1,7 +1,7 @@
 db = require '../db/cozy-adapter'
 
 # User defines user that can interact with the Cozy instance.
-module.exports = User = db.define 'User',
+module.exports = User = db.define 'user',
     id: String
     email: String
     password: String

@@ -1,6 +1,6 @@
 db = require '../db/cozy-adapter'
 
-module.exports = MesInfosStatuses = db.define 'MesInfosStatuses',
+module.exports = MesInfosStatuses = db.define 'mesinfosstatuses',
     id: String
     cozy_registered:
         type: Boolean

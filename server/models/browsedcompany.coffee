@@ -1,6 +1,6 @@
 db = require '../db/cozy-adapter'
 
-module.exports = BrowsedCompany = db.define 'BrowsedCompany',
+module.exports = BrowsedCompany = db.define 'browsedcompany',
     id: String
     origin:
         type: String
