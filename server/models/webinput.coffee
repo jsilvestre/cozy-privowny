@@ -1,6 +1,6 @@
 db = require '../db/cozy-adapter'
 
-module.exports = WebInput = db.define 'webinput',
+module.exports = WebInput = db.define 'WebInput',
     id: String
     origin:
         type: String

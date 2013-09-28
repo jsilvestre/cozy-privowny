@@ -1,6 +1,6 @@
 db = require '../db/cozy-adapter'
 
-module.exports = Identity = db.define 'identity',
+module.exports = Identity = db.define 'Identity',
     id: String
     firstName:
         type: String

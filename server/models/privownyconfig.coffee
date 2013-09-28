@@ -1,6 +1,6 @@
 db = require '../db/cozy-adapter'
 
-module.exports = PrivownyConfig = db.define 'privownyconfig',
+module.exports = PrivownyConfig = db.define 'PrivownyConfig',
     id: String
     password:
         type: String
