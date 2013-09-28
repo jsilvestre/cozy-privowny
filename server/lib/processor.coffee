@@ -1,6 +1,7 @@
 request = require 'request'
 moment = require 'moment'
 
+MesInfosStatuses = require 'mesinfosstatuses'
 BrowsedCompany = require '../models/browsedcompany'
 WebInput = require '../models/webinput'
 
@@ -52,6 +53,7 @@ class Processor
                             @startPolling()
                         , nextUpdate)
 
+    # We just poll the companies data
     poll: (callback) ->
 
         url = @getUrl 'companies'
@@ -72,43 +74,61 @@ class Processor
     refreshToken: ->
         console.log "Token refreshed, start the polling..."
         refreshToken = @token.refresh_token
-        url = "https://mesinfos.privowny.com/api/oauth/token.dispatch?client_id=clientId&client_secret=clientSecret&refresh_token=#{refreshToken}&grant_type=refresh_token"
+        url = "https://mesinfos.privowny.com/api/oauth/token.dispatch?" + \
+              "client_id=clientId&client_secret=clientSecret&" + \
+              "refresh_token=#{refreshToken}&grant_type=refresh_token"
         request.get {url: url, json: true}, (err, res, body) =>
-            if err?
-                console.log "Cannot refresh token"
-                console.log "Must reask user consent"
-            else if res? and res.statusCode is 401
-                console.log "> Invalid refresh token, must reask user consent"
+            if err? or (res? and res.statusCode is 401)
+                msg = "Invalid refresh token, must reask user consent"
+                console.log "#{msg} -- #{res?.statusCode} -- #{err}"
+                @token = null
+                @privownyConfig.updateAttributes token: null, (err) =>
+                    msg = "Couldn't update privownyConfig attributes -- #{err}"
+                    console.log msg if err?
+
+                    MesInfosStatuses.getStatuses (err, mis) ->
+                        console.log err if err?
+                        param = privowny_oauth_registered: false
+                        mis.updateAttributes param, (err) ->
+                            console.log err if err?
             else
-                @privownyConfig.updateAttributes token: body (err) =>
-                    if err?
-                        console.log "Must reask user consent"
+                @privownyConfig.updateAttributes token: body, (err) =>
+                    msg = "Couldn't update privownyConfig attributes -- #{err}"
+                    console.log msg if err?
                     else
                         @token = body
+                        @startPolling()
 
 
     _companyFactory: (company) ->
 
         BrowsedCompany.findByPOID company, (err, bc) =>
 
+            companyName = #{company.companyName}
             if not bc? or bc.length is 0
-                console.log "Company #{company.companyName} does not exist, creating..."
+                msg = "Company #{companyName} does not exist, creating..."
+                console.log msg
                 cmp =
-                    companyName: company.companyName
+                    companyName: companyName
                     poCompanyId: company.id
                 BrowsedCompany.create cmp, (err, bc) ->
                     console.log err if err?
-                    console.log "Company #{company.companyName} added."
+                    console.log "Company #{companyName} added."
             else
-                console.log "Company #{company.companyName} already exists, updating parameters..."
+                msg = "Company #{companyName} already exists, updating " + \
+                      "parameters...(disabled for now)"
+                console.log msg
+                ###
                 url = @getUrl 'parameters', companyId: bc.poCompanyId
                 request.get {url: url, json: true}, (err, res, body) =>
                     console.log err if err?
 
+                    # Disabled for now
                     if body? and body.success and body.parameters?
-                        console.log "Parameters for company #{company.companyName}"
+                        console.log "Parameters for company #{companyName}"
                         for param in body.parameters
                             @_parameterFactory param.paramId, company
+                ###
 
     _parameterFactory: (paramID, company) ->
         url = @getUrl 'parameters', id: paramID
