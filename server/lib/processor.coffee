@@ -1,7 +1,7 @@
 request = require 'request'
 moment = require 'moment'
 
-MesInfosStatuses = require 'mesinfosstatuses'
+MesInfosStatuses = require '../models/mesinfosstatuses'
 BrowsedCompany = require '../models/browsedcompany'
 WebInput = require '../models/webinput'
 
@@ -46,17 +46,19 @@ class Processor
                                         .hours(0)
                                         .minutes(delta)
                                         .seconds(0)
-                                        .diff(now)
 
+                    format = "DD/MM/YYYY [at] HH:mm:ss"
+                    console.log "> Next update on #{nextUpdate.format(format)}"
                     @timeout = setTimeout(
                         () =>
                             @startPolling()
-                        , nextUpdate)
+                        , nextUpdate.diff(now))
 
     # We just poll the companies data
     poll: (callback) ->
 
         url = @getUrl 'companies'
+        console.log url
         request.get {url: url, json: true}, (err, res, body) =>
             console.log err if err?
 
@@ -64,7 +66,7 @@ class Processor
                 console.log "> Invalid token, starting the refreshing process."
                 @refreshToken()
 
-            else if res? and res.statusCode and statusCode is 200
+            else if res? and res.statusCode and res.statusCode is 200
                 companies = body.companies || []
                 for company in companies
                     @_companyFactory company
@@ -72,16 +74,16 @@ class Processor
                 callback() if callback?
 
     refreshToken: ->
-        console.log "Token refreshed, start the polling..."
-        refreshToken = @token.refresh_token
+        refreshToken = @privownyConfig.token.refresh_token
         url = "https://mesinfos.privowny.com/api/oauth/token.dispatch?" + \
               "client_id=clientId&client_secret=clientSecret&" + \
               "refresh_token=#{refreshToken}&grant_type=refresh_token"
         request.get {url: url, json: true}, (err, res, body) =>
             if err? or (res? and res.statusCode is 401)
                 msg = "Invalid refresh token, must reask user consent"
-                console.log "#{msg} -- #{res?.statusCode} -- #{err}"
-                @token = null
+                statusCode = if res?.statusCode then res.statusCode else ""
+                console.log "#{msg} -- #{statusCode} -- #{err}"
+                ###@token = null
                 @privownyConfig.updateAttributes token: null, (err) =>
                     msg = "Couldn't update privownyConfig attributes -- #{err}"
                     console.log msg if err?
@@ -91,20 +93,31 @@ class Processor
                         param = privowny_oauth_registered: false
                         mis.updateAttributes param, (err) ->
                             console.log err if err?
+                ###
             else
+                console.log "> Got a new access_token/refresh_token..."
                 @privownyConfig.updateAttributes token: body, (err) =>
                     msg = "Couldn't update privownyConfig attributes -- #{err}"
-                    console.log msg if err?
+                    if err?
+                        console.log msg
                     else
-                        @token = body
-                        @startPolling()
+                        timer = 300000 # 5 minutes
+                        timerMin = (300000/1000/60)
+                        msg = "> Token refreshed, start the polling " + \
+                             "in #{timerMin} minutes..."
+                        console.log msg
+                        @token = body.access_token
+                        @privownyConfig.token = body
+                        setTimeout () =>
+                                        @startPolling()
+                                   , timer
 
 
     _companyFactory: (company) ->
 
         BrowsedCompany.findByPOID company, (err, bc) =>
 
-            companyName = #{company.companyName}
+            companyName = company.companyName
             if not bc? or bc.length is 0
                 msg = "Company #{companyName} does not exist, creating..."
                 console.log msg
@@ -118,44 +131,52 @@ class Processor
                 msg = "Company #{companyName} already exists, updating " + \
                       "parameters...(disabled for now)"
                 console.log msg
-                ###
+
                 url = @getUrl 'parameters', companyId: bc.poCompanyId
+                console.log url
                 request.get {url: url, json: true}, (err, res, body) =>
                     console.log err if err?
+                    console.log res?.statusCode
+                    console.log body
 
-                    # Disabled for now
                     if body? and body.success and body.parameters?
                         console.log "Parameters for company #{companyName}"
                         for param in body.parameters
                             @_parameterFactory param.paramId, company
-                ###
 
     _parameterFactory: (paramID, company) ->
         url = @getUrl 'parameters', id: paramID
+        console.log url
         request.get {url: url, json: true}, (err, res, body) =>
-            console.log err if err?
-            param = body.parameters[0]
-            WebInput.findByPOID paramID, (err, wi) =>
-                console.log err if err?
+            hasResult = body? and body.success
+            if err? or (not res? or res.statusCode isnt 200) or not hasResult
+                console.log "Error retrieving parameters... -- #{err}"
+                console.log res?.statusCode
+                console.log body
+            else
+                WebInput.findByPOID paramID, (err, wi) =>
+                    console.log err if err?
 
-                if not wi? or wi.length is 0
-                    console.log "New parameter detected, adding to database..."
-                    prm =
-                        label: param.paramLabel
-                        value: param.paramValue
-                        siteName: ""
-                        companyName: company.companyName
-                        companyRename: company.companyName
-                        poParamId: param.id
-                        poPageId: null
-                        poSiteId: null
-                        snippet: "#{company.companyName} - #{param.paramLabel}"
+                    if not wi? or wi.length is 0
+                        console.log "New parameter detected, adding to " + \
+                                    "database..."
+                        snippet = "#{company.companyName} - #{body.paramLabel}"
+                        prm =
+                            label: body.paramLabel
+                            value: body.paramValue
+                            siteName: ""
+                            companyName: company.companyName
+                            companyRename: company.companyName
+                            poParamId: body.id
+                            poPageId: null
+                            poSiteId: null
+                            snippet: snippet
 
-                    WebInput.create prm, (err, wi) ->
-                        console.log err if err?
-                        console.log "Created parameter #{wi.label}"
-                else
-                    console.log "Parameter already existing."
+                        WebInput.create prm, (err, wi) ->
+                            console.log err if err?
+                            console.log "Created parameter #{wi.label}"
+                    else
+                        console.log "Parameter already existing."
 
     getUrl: (label, parameters = {}) ->
         parameters.access_token = @token
