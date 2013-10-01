@@ -82,7 +82,7 @@ class Processor
                 msg = "Invalid refresh token, must reask user consent"
                 statusCode = if res?.statusCode then res.statusCode else ""
                 console.log "#{msg} -- #{statusCode} -- #{err}"
-                ###@token = null
+                @token = null
                 @privownyConfig.updateAttributes token: null, (err) =>
                     msg = "Couldn't update privownyConfig attributes -- #{err}"
                     console.log msg if err?
@@ -92,7 +92,6 @@ class Processor
                         param = privowny_oauth_registered: false
                         mis.updateAttributes param, (err) ->
                             console.log err if err?
-                ###
             else
                 console.log "> Got a new access_token/refresh_token..."
                 @privownyConfig.updateAttributes token: body, (err) =>
