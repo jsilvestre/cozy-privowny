@@ -58,7 +58,6 @@ class Processor
     poll: (callback) ->
 
         url = @getUrl 'companies'
-        console.log url
         request.get {url: url, json: true}, (err, res, body) =>
             console.log err if err?
 
@@ -133,11 +132,9 @@ class Processor
                 console.log msg
 
                 url = @getUrl 'parameters', companyId: bc.poCompanyId
-                console.log url
                 request.get {url: url, json: true}, (err, res, body) =>
                     console.log err if err?
-                    console.log res?.statusCode
-                    console.log body
+                    console.log res?.statusCode if err?
 
                     if body? and body.success and body.parameters?
                         console.log "Parameters for company #{companyName}"
@@ -146,7 +143,6 @@ class Processor
 
     _parameterFactory: (paramID, company) ->
         url = @getUrl 'parameters', id: paramID
-        console.log url
         request.get {url: url, json: true}, (err, res, body) =>
             hasResult = body? and body.success
             if err? or (not res? or res.statusCode isnt 200) or not hasResult
@@ -167,9 +163,9 @@ class Processor
                             siteName: ""
                             companyName: company.companyName
                             companyRename: company.companyName
-                            poParamId: body.id
-                            poPageId: null
-                            poSiteId: null
+                            poParamId: parseInt paramID
+                            poPageId: body.pageId
+                            poSiteId: body.siteId
                             snippet: snippet
 
                         WebInput.create prm, (err, wi) ->
