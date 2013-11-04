@@ -24,25 +24,25 @@
   "author": "Cozycloud",
   "readmeFilename": "README.md",
   "cozy-permissions": {
-    "cozyinstance": {
+    "CozyInstance": {
       "description": "Afin de faciliter l'inscription à Privowny, l'application a besoin de connaître l'url de votre Cozy."
     },
-    "mesinfosstatuses": {
+    "MesinfosStatuses": {
       "description": "Afin d'organiser la prise en main de la plateforme, l'application a besoin de savoir ce que vous avez déjà fait ou pas."
     },
-    "user": {
+    "User": {
       "description": "Afin de faciliter l'inscription à Privowny, l'application a besoin de connaître vorte adresse email."
     },
-    "identity": {
+    "Identity": {
       "description": "Afin de faciliter l'inscription à Privowny, l'application a besoin de connaître votre identité."
     },
-    "privownyconfig": {
+    "PrivownyConfig": {
       "description": "Espace personnel de configuration de l'application Privowny."
     },
-    "webinput": {
+    "WebInput": {
       "description": "Les données que vous avez entrée et qui ont été enregistré par votre barre Privowny."
     },
-    "browsedcompany": {
+    "BrowsedCompany": {
       "description": "Les entreprises auxquelles vous avez laissé des données détectée par votre barre Privowny."
     }
   }
