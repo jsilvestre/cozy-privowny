@@ -25,11 +25,8 @@ module.exports = (app) ->
         request.get {url: url, json: true}, (err, response, body) ->
 
             if err? or not (res?.statusCode is 200) or not body? or not body.access_token?
-                statusCode = 500
                 console.log "Error occurred from Privowny server -- #{err}"
             else
-                statusCode = 200
-
                 PrivownyConfig.getConfig (err, pc) ->
                     console.log "Can't get PrivownyConfig -- #{err}" if err?
                     pc.updateAttributes token: body, (err) ->
@@ -38,14 +35,20 @@ module.exports = (app) ->
                             console.log msg
                         else
                             # update privonwy oauth status
-                            MesInfosStatuses.getStatuses (err, mis) ->
-                                mis.privowny_oauth_registered = true
-                                mis.save mis, (err) ->
-                                    if err?
-                                        console.log "Oauth::authorize > #{err}"
+                            MesInfosStatuses.getStatuses (err, statuses) ->
+                                if not err? and statuses?
+                                    statuses.privowny_oauth_registered = true
+                                    statuses.save statuses, (err) ->
+                                        if err?
+                                            msg = "Oauth::authorize > #{err}"
+                                            console.log msg
 
-                                    # dev mode
-                                    if host is "http://localhost:9262"
-                                        res.redirect "/"
-                                    else
-                                        res.redirect "https://mesinfos.privowny.com/"
+                                        # dev mode
+                                        if host is "http://localhost:9262"
+                                            res.redirect "/"
+                                        else
+                                            res.redirect "https://mesinfos." + \
+                                                  "privowny.com/"
+                                else
+                                    msg = "Can't retrieve MesInfosStatuses"
+                                    console.log msg
