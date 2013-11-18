@@ -82,9 +82,8 @@ class Processor
             if not bc? or bc.length is 0
                 msg = "Company #{companyName} does not exist, creating..."
                 console.log msg
-                companyName: company.companyName
-                poCompanyId: company.id
-                BrowsedCompany.create cmp, (err, bc) ->
+                company.poCompanyId = company.id
+                BrowsedCompany.create company, (err, bc) =>
                     console.log err if err?
                     console.log "Company #{companyName} added."
                     @_getParametersByCompany company, callback
