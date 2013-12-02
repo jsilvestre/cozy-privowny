@@ -60,6 +60,7 @@ class Processor
     poll: (callback) ->
 
         url = @getUrl 'companies'
+        console.log "Get companies..."
         request.get url: url, json: true, (err, res, body) =>
             console.log err if err?
 
@@ -95,6 +96,7 @@ class Processor
 
     _getParametersByCompany: (company, callback) ->
         companyName = company.companyName
+        console.log "Get parameters..."
         url = @getUrl 'parameters', companyId: company.id
         request.get {url: url, json: true}, (err, res, body) =>
             console.log err if err?
@@ -165,9 +167,10 @@ class Processor
         url = "https://mesinfos.privowny.com/api/oauth/token.dispatch?" + \
               "client_id=clientId&client_secret=clientSecret&" + \
               "refresh_token=#{refreshToken}&grant_type=refresh_token"
+        console.log "Refresh token..."
         request.get {url: url, json: true}, (err, res, body) =>
             if err? or (res? and res.statusCode is 401)
-                msg = "Invalid refresh token, must reask user consent"
+                msg = "> Invalid refresh token, must reask user consent"
                 statusCode = if res?.statusCode then res.statusCode else ""
                 console.log "#{msg} -- #{statusCode} -- #{err}"
                 @token = null
