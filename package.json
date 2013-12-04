@@ -4,9 +4,9 @@
   "description": "Accéder à vos données Privowny depuis Cozy.",
   "main": "server.coffee",
   "dependencies": {
-    "jugglingdb": "0.2.2",
-    "jugglingdb-cozy-adapter": "0.4.0",
-    "express": "3.4.4",
+    "jugglingdb": "0.2.5",
+    "jugglingdb-cozy-adapter": "0.4.3",
+    "express": "3.4.6",
     "jade": "0.35.0",
     "async": "~0.2.9",
     "request": "~2.27.0",
