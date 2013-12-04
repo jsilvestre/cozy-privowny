@@ -66,7 +66,8 @@ module.exports = init = (callback) ->
 if not module.parent
     init (err) ->
         if err
-            console.log "init failled"
+            console.log "Init failed"
+            console.log err.message
             console.log err.stack
         else
-            console.log "init success"
+            console.log "Init success"
